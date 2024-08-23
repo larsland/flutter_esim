@@ -95,7 +95,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_OK) {
                 sendEvent("success", HashMap())
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_ERROR) {
-                sendEvent("fail", HashMap())
+                handleResolvableError(intent)
             } else {
                 // Unknown Error
                 sendEvent("unknown", HashMap())
