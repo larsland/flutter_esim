@@ -98,7 +98,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 val detailedErrorCode = EuiccManager.EXTRA_EMBEDDED_SUBSCRIPTION_DETAILED_CODE.toString()
                 val detailsBody = hashMapOf("errorCode" to detailedErrorCode)
                 sendEvent("fail", detailsBody)
-                sendEvent(detailedErrorCode, "")
+                sendEvent(detailedErrorCode, HashMap())
             } else {
                 // Unknown Error
                 sendEvent("unknown", HashMap())
