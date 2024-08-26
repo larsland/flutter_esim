@@ -33,10 +33,6 @@ abstract class FlutterEsimPlatform extends PlatformInterface {
     throw UnimplementedError('installEsimProfile() has not been implemented.');
   }
 
-  Future<String> instructions() {
-    throw UnimplementedError('instructions() has not been implemented.');
-  }
-
   Stream<dynamic> get onEvent =>
       throw UnimplementedError('onEvent() has not been implemented.');
 }

@@ -27,12 +27,6 @@ class MethodChannelFlutterEsim extends FlutterEsimPlatform {
   }
 
   @override
-  Future<String> instructions() async {
-    final result = await methodChannel.invokeMethod<String>('instructions');
-    return result ?? "";
-  }
-
-  @override
   Stream<dynamic> get onEvent =>
       eventChannel.receiveBroadcastStream().map(_receiveCallEvent);
 

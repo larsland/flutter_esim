@@ -95,7 +95,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_OK) {
                 sendEvent("success", HashMap())
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_ERROR) {
-                handleResolvableError(intent)
+                sendEvent("fail", HashMap())
             } else {
                 // Unknown Error
                 sendEvent("unknown", HashMap())
@@ -157,20 +157,6 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                                 PendingIntent.FLAG_MUTABLE
                     )
                     mgr?.downloadSubscription(sub, true, callbackIntent)
-                }
-
-                "instructions" -> {
-                    Log.d("installEsimProfile", "")
-                    result.success("1. Save QR Code\n" +
-                    "2. Go to Settings on your device\n" +
-                    "3. TAP Connections\n" +
-                    "4. TAP SIM Manager\n" +
-                    "5. TAP Add eSIM\n" +
-                    "6. TAP Scan QR code from service provider\n" +
-                    "7. TAP Enter activation code\n"+
-                    "8. ENTER the activation code found in the eSIM details\n"+
-                    "9. TAP Connect\n" +
-                    "10. TAP Add")
                 }
             }
         } catch (error: Exception) {

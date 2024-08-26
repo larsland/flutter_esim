@@ -12,10 +12,5 @@ class FlutterEsim {
     return FlutterEsimPlatform.instance.installEsimProfile(profile);
   }
 
-  /// Instructions setup eSIM.
-  Future<String> instructions() async {
-    return FlutterEsimPlatform.instance.instructions();
-  }
-
   Stream<dynamic> get onEvent => FlutterEsimPlatform.instance.onEvent;
 }
