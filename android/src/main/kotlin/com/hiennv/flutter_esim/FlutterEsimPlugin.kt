@@ -96,7 +96,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 sendEvent("success", HashMap())
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_ERROR) {
                 val detailedErrorCode = EuiccManager.EXTRA_EMBEDDED_SUBSCRIPTION_DETAILED_CODE
-                val detailsBody = hashMapOf("resultCode" to getResultCode(), "resultData" to getResultData(), "resultExtras" to getResultExtras(makeMap: false))
+                val detailsBody = hashMapOf("resultCode" to getResultCode(), "resultData" to getResultData(), "resultExtras" to getResultExtras(false))
                 sendEvent("fail", detailsBody)
             } else {
                 // Unknown Error
