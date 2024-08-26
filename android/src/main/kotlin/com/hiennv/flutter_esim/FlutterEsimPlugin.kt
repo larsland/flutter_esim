@@ -98,10 +98,8 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 val resultCode = getResultCode()
                 val resultData = getResultData()
                 val resultExtras = getResultExtras(false)
-                val operationCode = intent.get("EXTRA_EMBEDDED_SUBSCRIPTION_OPERATION_CODE")
-                val extraErrorCode = intent.get("EXTRA_EMBEDDED_SUBSCRIPTION_ERROR_CODE")
 
-                val detailsBody = hashMapOf("resultCode" to resultCode, "resultData" to resultData, "resultExtras" to resultExtras, "operationCode" to operationCode, "extraErrorCode" to extraErrorCode)
+                val detailsBody = hashMapOf("resultCode" to resultCode, "resultData" to resultData, "resultExtras" to resultExtras)
                 sendEvent("fail", detailsBody)
             } else {
                 // Unknown Error
