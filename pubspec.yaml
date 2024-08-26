@@ -25,5 +25,3 @@ flutter:
       android:
         package: com.hiennv.flutter_esim
         pluginClass: FlutterEsimPlugin
-      ios:
-        pluginClass: FlutterEsimPlugin
