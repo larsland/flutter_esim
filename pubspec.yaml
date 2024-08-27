@@ -1,9 +1,6 @@
-name: flutter_esim
+name: talkmore_flutter_esim
 description: "A Flutter plugin for eSim, checker and installer. This repository hosts a Flutter plugin designed to check device compatibility with eSIM and facilitate the installation of eSIM profiles directly within a Flutter app. The plugin provides a seamless way for developers to determine if a device supports eSIM and, if so, allows them to integrate eSIM functionality into their applications."
-version: 0.0.4
-homepage: https://github.com/hiennguyen92/flutter_esim
-repository: https://github.com/hiennguyen92/flutter_esim
-issue_tracker: https://github.com/hiennguyen92/flutter_esim/issues
+version: 0.0.1
 
 environment:
   sdk: ">=2.19.0 <4.0.0"
@@ -23,5 +20,5 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.hiennv.flutter_esim
+        package: no.talkmore.flutter_esim
         pluginClass: FlutterEsimPlugin

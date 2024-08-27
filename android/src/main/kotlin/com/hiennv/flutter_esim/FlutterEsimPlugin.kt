@@ -1,4 +1,4 @@
-package com.hiennv.flutter_esim
+package no.talkmore.flutter_esim
 
 import android.annotation.SuppressLint
 import android.app.Activity
