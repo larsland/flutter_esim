@@ -185,7 +185,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent.class)
             .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
             .build()
-            .sanitizeByFiltering(intent);
+            .sanitizeByThrowing(intent);
 
         val callbackIntent = PendingIntent.getBroadcast(context, REQUEST_CODE_INSTALL, safeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
