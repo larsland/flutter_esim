@@ -130,7 +130,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         return
                     }
 
-                    val filter = new IntentFilter(ACTION_DOWNLOAD_SUBSCRIPTION)
+                    val filter = IntentFilter(ACTION_DOWNLOAD_SUBSCRIPTION)
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         context?.registerReceiver(
@@ -157,7 +157,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         } else {
                             val activationCode = (call.arguments as HashMap<*, *>)["profile"] as String
                             val sub = DownloadableSubscription.forActivationCode(activationCode);
-                            val intent = new Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context.getPackageName());
+                            val intent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context.getPackageName());
                             val callbackIntent = PendingIntent.getBroadcast(
                                 context, 
                                 REQUEST_CODE_INSTALL, 
@@ -178,7 +178,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
 
     private fun handleResolvableError(intent: Intent) {
-        val safeIntent = new  IntentSanitizer.Builder()
+        val safeIntent = IntentSanitizer.Builder()
             .allowAnyComponent()
             .allowPackage("no.talkmore.flutter_esim")
             .allowFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
