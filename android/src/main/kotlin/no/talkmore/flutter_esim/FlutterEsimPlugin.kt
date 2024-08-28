@@ -71,6 +71,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     }
 
+    private var installEsimPromise: Promise
     private var activity: Activity? = null
     private var context: Context? = null
 
@@ -78,8 +79,9 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         initSharedInstance(flutterPluginBinding)
     }
 
-    private val REQUEST_CODE_INSTALL = 999
+    private val REQUEST_CODE_INSTALL = 0
     private val ACTION_DOWNLOAD_SUBSCRIPTION = "download_subscription"
+    private val LPA_DECLARED_PERMISSION = "no.talkmore.flutter_esim.lpa.permission.BROADCAST";
 
     private var mgr: EuiccManager? = null
 
@@ -132,36 +134,45 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         return
                     }
 
+                    val filter = new IntentFilter(ACTION_DOWNLOAD_SUBSCRIPTION)
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         context?.registerReceiver(
                             receiver,
-                            IntentFilter(ACTION_DOWNLOAD_SUBSCRIPTION),
-                            null,
+                            filter,
+                            LPA_DECLARED_PERMISSION,
                             null,
                             Context.RECEIVER_NOT_EXPORTED
                         )
                     } else {
-                        context?.registerReceiver(
-                            receiver,
-                            IntentFilter(ACTION_DOWNLOAD_SUBSCRIPTION),
-                            null,
-                            null
+                        ContextCompat.registerReceiver(
+                            context, 
+                            receiver, 
+                            filter, 
+                            LPA_DECLARED_PERMISSION,
+                            null, 
+                            ContextCompat.RECEIVER_NOT_EXPORTED
                         )
                     }
-                    val eSimProfile = (call.arguments as HashMap<*, *>)["profile"] as String
-                    val sub = DownloadableSubscription.forActivationCode(eSimProfile)
-                    val explicitIntent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION);
-                    explicitIntent.apply {
-                        `package` = context?.packageName
+
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                        if (mgr == null || !mgr.isEnabled()) {
+                            sendEvent("unsupported os or device")
+                        } else {
+                            val activationCode = (call.arguments as HashMap<*, *>)["profile"] as String
+                            val sub = DownloadableSubscription.forActivationCode(activationCode);
+                            val intent = new Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context.getPackageName());
+                            val callbackIntent = PendingIntent.getBroadcast(
+                                context, 
+                                0, 
+                                intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                            )
+                            mgr?.downloadSubscription(sub, true, callbackIntent)
+                        }
+                    } else {
+                        sendEvent("unsupported os or device")
                     }
-                    val callbackIntent = PendingIntent.getBroadcast(
-                        context,
-                        REQUEST_CODE_INSTALL,
-                        explicitIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT or
-                                PendingIntent.FLAG_MUTABLE
-                    )
-                    mgr?.downloadSubscription(sub, false, callbackIntent)
                 }
             }
         } catch (error: Exception) {
@@ -171,25 +182,25 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
 
     private fun handleResolvableError(intent: Intent) {
+        val safeIntent = new IntentSanitizer.Builder()
+            .allowAnyComponent()
+            .allowPackage("no.talkmore.flutter_esim")
+            .allowFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
+            .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent.class)
+            .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
+            .build()
+            .sanitizeByFiltering(intent);
+
+        val callbackIntent = PendingIntent.getBroadcast(context, 0, safeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+
         try {
-            val explicitIntent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION);
-            explicitIntent.apply {
-                `package` = context?.packageName
-            }
-            val callbackIntent = PendingIntent.getBroadcast(
-                context, REQUEST_CODE_INSTALL,
-                explicitIntent, PendingIntent.FLAG_UPDATE_CURRENT or
-                        PendingIntent.FLAG_MUTABLE
-            )
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                mgr!!.startResolutionActivity(
-                    activity,
-                    REQUEST_CODE_INSTALL,
-                    intent,
-                    callbackIntent
-                )
-            }
-        } catch (e: java.lang.Exception) {
+            mgr?.startResolutionActivity(
+                context.getCurrentActivity(),
+                0,
+                intent,
+                callbackIntent);
+        } catch (IntentSender.SendIntentException e) {
+            installEsimPromise.reject(e);
         }
     }
 
