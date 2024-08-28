@@ -67,11 +67,8 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             events.setStreamHandler(handler)
             eventChannels[flutterPluginBinding.binaryMessenger] = events
         }
-
-
     }
 
-    private var installEsimPromise: Promise
     private var activity: Activity? = null
     private var context: Context? = null
 
@@ -95,17 +92,16 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_RESOLVABLE_ERROR && mgr != null) {
                 handleResolvableError(intent)
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_OK) {
-                sendEvent("success", HashMap())
+                sendEvent("1", hasMapOf("resultCode" to resultCode, "message" to "Successfully installed ESIM"))
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_ERROR) {
                 val resultCode = getResultCode()
                 val resultData = getResultData()
                 val resultExtras = getResultExtras(false)
 
-                val detailsBody = hashMapOf("resultCode" to resultCode, "resultData" to resultData, "resultExtras" to resultExtras)
-                sendEvent("fail", detailsBody)
+                val detailsBody = hashMapOf("resultCode" to resultCode, "message" to "failed to install ESIM")
+                sendEvent("3", detailsBody)
             } else {
-                // Unknown Error
-                sendEvent("unknown", HashMap())
+                sendEvent("4", hashMapOf("resultCode" to resultCode, "message" to "an unknown error occured"))
             }
         }
     }
@@ -125,12 +121,12 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 "installEsimProfile" -> {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                        sendEvent("unsupport", HashMap())
+                        sendEvent("5", hasMapOf("message" to "unsupported os or device"))
                         return
                     }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && mgr != null && !mgr!!.isEnabled) {
-                        sendEvent("unsupport", HashMap())
+                        sendEvent("5", hasMapOf("message" to "unsupported os or device"))
                         return
                     }
 
@@ -157,21 +153,21 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                         if (mgr == null || !mgr.isEnabled()) {
-                            sendEvent("unsupported os or device")
+                            sendEvent("5", hasMapOf("message" to "unsupported os or device"))
                         } else {
                             val activationCode = (call.arguments as HashMap<*, *>)["profile"] as String
                             val sub = DownloadableSubscription.forActivationCode(activationCode);
                             val intent = new Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context.getPackageName());
                             val callbackIntent = PendingIntent.getBroadcast(
                                 context, 
-                                0, 
+                                REQUEST_CODE_INSTALL, 
                                 intent,
                                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
                             )
                             mgr?.downloadSubscription(sub, true, callbackIntent)
                         }
                     } else {
-                        sendEvent("unsupported os or device")
+                        sendEvent("5", hasMapOf("message" to "unsupported os or device"))
                     }
                 }
             }
@@ -191,19 +187,18 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             .build()
             .sanitizeByFiltering(intent);
 
-        val callbackIntent = PendingIntent.getBroadcast(context, 0, safeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        val callbackIntent = PendingIntent.getBroadcast(context, REQUEST_CODE_INSTALL, safeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         try {
             mgr?.startResolutionActivity(
-                context.getCurrentActivity(),
-                0,
+                activity,
+                REQUEST_CODE_INSTALL,
                 intent,
                 callbackIntent);
-        } catch (IntentSender.SendIntentException e) {
-            installEsimPromise.reject(e);
+        } catch (e: IntentSender.SendIntentException) {
+            sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e.toString()))
         }
     }
-
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         methodChannels.remove(binding.binaryMessenger)?.setMethodCallHandler(null)
