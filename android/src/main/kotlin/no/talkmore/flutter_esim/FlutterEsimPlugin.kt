@@ -184,19 +184,25 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             .allowAnyComponent()
             .allowPackage("no.talkmore.flutter_esim")
             .allowFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
-            .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent.class)
+            .allowExtra(android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT, PendingIntent.class)
             .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
             .build()
-            .sanitizeByThrowing(intent)
+            .sanitizeByThrowing(intent);
 
-        val callbackIntent = PendingIntent.getBroadcast(context, REQUEST_CODE_INSTALL, safeIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
+        val callbackIntent = PendingIntent.getBroadcast(
+            context, 
+            REQUEST_CODE_INSTALL, 
+            safeIntent, 
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
 
         try {
             mgr?.startResolutionActivity(
                 activity,
                 REQUEST_CODE_INSTALL,
                 intent,
-                callbackIntent)
+                callbackIntent
+            )
         } catch (e: SendIntentException) {
             sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e.toString()))
         }
