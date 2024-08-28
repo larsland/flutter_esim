@@ -139,7 +139,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         context?.registerReceiver(
                             receiver,
                             filter,
-                            LPA_DECLARED_PERMISSION,
+                            //LPA_DECLARED_PERMISSION,
                             null,
                             Context.RECEIVER_NOT_EXPORTED
                         )
@@ -148,7 +148,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             context!!,
                             receiver,
                             filter, 
-                            LPA_DECLARED_PERMISSION, 
+                            //LPA_DECLARED_PERMISSION,
                             null, 
                             ContextCompat.RECEIVER_NOT_EXPORTED
                         )
