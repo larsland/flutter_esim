@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.Context.EUICC_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
+import androidx.core.content.ContextCompat;
+import androidx.core.content.IntentSanitizer;
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -141,11 +143,13 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             Context.RECEIVER_NOT_EXPORTED
                         )
                     } else {
-                        context?.registerReceiver(
+                        ContextCompat.registerReceiver(
+                            context,
                             receiver,
-                            filter,
-                            LPA_DECLARED_PERMISSION,
-                            null
+                            filter, 
+                            LPA_DECLARED_PERMISSION, 
+                            null, 
+                            ContextCompat.RECEIVER_NOT_EXPORTED
                         )
                     }
 
