@@ -141,13 +141,11 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             Context.RECEIVER_NOT_EXPORTED
                         )
                     } else {
-                        ContextCompat.registerReceiver(
-                            context, 
-                            receiver, 
-                            filter, 
+                        context?.registerReceiver(
+                            receiver,
+                            filter,
                             LPA_DECLARED_PERMISSION,
-                            null, 
-                            ContextCompat.RECEIVER_NOT_EXPORTED
+                            null
                         )
                     }
 
@@ -187,14 +185,14 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             .build()
             .sanitizeByThrowing(intent)
 
-        val callbackIntent = PendingIntent.getBroadcast(context, REQUEST_CODE_INSTALL, safeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        val callbackIntent = PendingIntent.getBroadcast(context, REQUEST_CODE_INSTALL, safeIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
 
         try {
             mgr?.startResolutionActivity(
                 activity,
                 REQUEST_CODE_INSTALL,
                 intent,
-                callbackIntent);
+                callbackIntent)
         } catch (e: SendIntentException) {
             sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e.toString()))
         }
