@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Context.EUICC_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.IntentSender.SendIntentException 
 import androidx.core.content.ContextCompat;
 import androidx.core.content.IntentSanitizer;
 import android.os.Build
@@ -144,7 +145,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         )
                     } else {
                         ContextCompat.registerReceiver(
-                            context,
+                            context!!,
                             receiver,
                             filter, 
                             LPA_DECLARED_PERMISSION, 
@@ -154,20 +155,16 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     }
 
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                        if (mgr == null || !mgr.isEnabled()) {
-                            sendEvent("5", hashMapOf("message" to "unsupported os or device"))
-                        } else {
-                            val activationCode = (call.arguments as HashMap<*, *>)["profile"] as String
-                            val sub = DownloadableSubscription.forActivationCode(activationCode);
-                            val intent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context.getPackageName());
-                            val callbackIntent = PendingIntent.getBroadcast(
-                                context, 
-                                REQUEST_CODE_INSTALL, 
-                                intent,
-                                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-                            )
-                            mgr?.downloadSubscription(sub, true, callbackIntent)
-                        }
+                        val activationCode = (call.arguments as HashMap<*, *>)["profile"] as String
+                        val sub = DownloadableSubscription.forActivationCode(activationCode);
+                        val intent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context.getPackageName());
+                        val callbackIntent = PendingIntent.getBroadcast(
+                            context, 
+                            REQUEST_CODE_INSTALL, 
+                            intent,
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                        )
+                        mgr?.downloadSubscription(sub, true, callbackIntent)
                     } else {
                         sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                     }
@@ -203,7 +200,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 intent,
                 callbackIntent
             )
-        } catch (e: SendIntentException) {
+        } catch (e: IntentSender.SendIntentException) {
             sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e.toString()))
         }
     }
