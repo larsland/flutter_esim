@@ -157,7 +157,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                         val activationCode = (call.arguments as HashMap<*, *>)["profile"] as String
                         val sub = DownloadableSubscription.forActivationCode(activationCode);
-                        val intent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context.getPackageName());
+                        val intent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context?.getPackageName());
                         val callbackIntent = PendingIntent.getBroadcast(
                             context, 
                             REQUEST_CODE_INSTALL, 
@@ -184,7 +184,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             .allowExtra(android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT, PendingIntent.class)
             .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
             .build()
-            .sanitizeByThrowing(intent);
+            .sanitizeByThrowing(intent)
 
         val callbackIntent = PendingIntent.getBroadcast(
             context, 
@@ -200,7 +200,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 intent,
                 callbackIntent
             )
-        } catch (e: IntentSender.SendIntentException) {
+        } catch (e: SendIntentException) {
             sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e.toString()))
         }
     }
