@@ -181,7 +181,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             .allowAnyComponent()
             .allowPackage("no.talkmore.flutter_esim")
             .allowFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
-            .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent)
+            .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent::class.java)
             .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
             .build()
             .sanitizeByThrowing(intent);
