@@ -92,7 +92,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_RESOLVABLE_ERROR && mgr != null) {
                 handleResolvableError(intent)
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_OK) {
-                sendEvent("1", hasMapOf("resultCode" to resultCode, "message" to "Successfully installed ESIM"))
+                sendEvent("1", hashMapOf("resultCode" to resultCode, "message" to "Successfully installed ESIM"))
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_ERROR) {
                 val resultCode = getResultCode()
                 val resultData = getResultData()
@@ -121,12 +121,12 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 "installEsimProfile" -> {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                        sendEvent("5", hasMapOf("message" to "unsupported os or device"))
+                        sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                         return
                     }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && mgr != null && !mgr!!.isEnabled) {
-                        sendEvent("5", hasMapOf("message" to "unsupported os or device"))
+                        sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                         return
                     }
 
@@ -153,7 +153,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                         if (mgr == null || !mgr.isEnabled()) {
-                            sendEvent("5", hasMapOf("message" to "unsupported os or device"))
+                            sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                         } else {
                             val activationCode = (call.arguments as HashMap<*, *>)["profile"] as String
                             val sub = DownloadableSubscription.forActivationCode(activationCode);
@@ -167,7 +167,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             mgr?.downloadSubscription(sub, true, callbackIntent)
                         }
                     } else {
-                        sendEvent("5", hasMapOf("message" to "unsupported os or device"))
+                        sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                     }
                 }
             }
@@ -178,14 +178,14 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
 
     private fun handleResolvableError(intent: Intent) {
-        val safeIntent = new IntentSanitizer.Builder()
+        val safeIntent = new  IntentSanitizer.Builder()
             .allowAnyComponent()
             .allowPackage("no.talkmore.flutter_esim")
             .allowFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
             .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent.class)
             .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
             .build()
-            .sanitizeByThrowing(intent);
+            .sanitizeByThrowing(intent)
 
         val callbackIntent = PendingIntent.getBroadcast(context, REQUEST_CODE_INSTALL, safeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
@@ -195,7 +195,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 REQUEST_CODE_INSTALL,
                 intent,
                 callbackIntent);
-        } catch (e: IntentSender.SendIntentException) {
+        } catch (e: SendIntentException) {
             sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e.toString()))
         }
     }
