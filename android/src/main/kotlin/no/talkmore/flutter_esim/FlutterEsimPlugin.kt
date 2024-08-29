@@ -81,8 +81,8 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private val REQUEST_CODE_INSTALL = 0
     private val ACTION_DOWNLOAD_SUBSCRIPTION = "download_subscription"
-    private val LPA_DECLARED_PERMISSION = "no.talkmore.faktura.lpa.permission.BROADCAST";
-    private val ALLOWED_PACKAGE = "no.talkmore.faktura";
+    private val LPA_DECLARED_PERMISSION = "no.talkmore.flutter_esim.lpa.permission.BROADCAST";
+    private val ALLOWED_PACKAGE = "no.talkmore.flutter_esim";
 
     private var mgr: EuiccManager? = null
 
