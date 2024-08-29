@@ -81,7 +81,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private val REQUEST_CODE_INSTALL = 0
     private val ACTION_DOWNLOAD_SUBSCRIPTION = "download_subscription"
-    private val LPA_DECLARED_PERMISSION = "no.telenor.faktura.lpa.permission.BROADCAST";
+    private val LPA_DECLARED_PERMISSION = "no.talkmore.faktura.lpa.permission.BROADCAST";
 
     private val ALLOWED_PACKAGE = "no.talkmore.faktura";
 
@@ -99,13 +99,13 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_OK) {
                 sendEvent("1", hashMapOf("resultCode" to resultCode, "message" to "Successfully installed ESIM"))
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_ERROR) {
+                handleResolvableError(intent)
                 val resultCode = getResultCode()
                 val resultData = getResultData()
                 val resultExtras = getResultExtras(false)
 
                 val detailsBody = hashMapOf("resultCode" to resultCode, "message" to "failed to install ESIM")
                 sendEvent("3", detailsBody)
-                handleResolvableError(intent)
             } else {
                 sendEvent("4", hashMapOf("resultCode" to resultCode, "message" to "an unknown error occured"))
             }
