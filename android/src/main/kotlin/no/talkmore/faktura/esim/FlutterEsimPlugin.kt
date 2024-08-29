@@ -129,6 +129,9 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         action = EuiccManager.ACTION_START_EUICC_ACTIVATION
                         putExtra(EuiccManager.EXTRA_USE_QR_SCANNER, false)
                     }
+
+                    startActivity(lpaActivityIntent)
+
                     return
 
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
