@@ -82,6 +82,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private val REQUEST_CODE_INSTALL = 0
     private val ACTION_DOWNLOAD_SUBSCRIPTION = "download_subscription"
     private val LPA_DECLARED_PERMISSION = "no.talkmore.faktura.lpa.permission.BROADCAST";
+    private val ALLOWED_PACKAGE = "no.talkmore.faktura";
 
     private var mgr: EuiccManager? = null
 
@@ -139,8 +140,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         context?.registerReceiver(
                             receiver,
                             filter,
-                            //LPA_DECLARED_PERMISSION,
-                            null,
+                            LPA_DECLARED_PERMISSION,
                             null,
                             Context.RECEIVER_NOT_EXPORTED
                         )
@@ -149,8 +149,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             context!!,
                             receiver,
                             filter, 
-                            //LPA_DECLARED_PERMISSION,
-                            null,
+                            LPA_DECLARED_PERMISSION,
                             null, 
                             ContextCompat.RECEIVER_NOT_EXPORTED
                         )
@@ -181,7 +180,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun handleResolvableError(intent: Intent) {
         val safeIntent = IntentSanitizer.Builder()
             .allowAnyComponent()
-            .allowPackage("no.talkmore.faktura")
+            .allowPackage(ALLOWED_PACKAGE)
             .allowFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
             .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent::class.java)
             .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
