@@ -125,6 +125,12 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
 
                 "installEsimProfile" -> {
+                    private var lpaActivityIntent = Intent().apply {
+                        action = EuiccManager.ACTION_START_EUICC_ACTIVATION
+                        putExtra(EuiccManager.EXTRA_USE_QR_SCANNER, false)
+                    }
+                    return
+
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                         sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                         return
