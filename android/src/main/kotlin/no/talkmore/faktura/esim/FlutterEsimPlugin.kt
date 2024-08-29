@@ -166,7 +166,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             intent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
                         )
-                        mgr?.downloadSubscription(sub, true, callbackIntent)
+                        mgr?.downloadSubscription(sub, false, callbackIntent)
                     } else {
                         sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                     }
