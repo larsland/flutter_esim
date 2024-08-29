@@ -82,7 +82,9 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private val REQUEST_CODE_INSTALL = 0
     private val ACTION_DOWNLOAD_SUBSCRIPTION = "download_subscription"
     private val LPA_DECLARED_PERMISSION = "no.talkmore.faktura.lpa.permission.BROADCAST";
-    private val ALLOWED_PACKAGE = "no.talkmore.faktura";
+
+    private val ALLOWED_PACKAGE = "no.talkmore.faktura.esim";
+    private val ALLOWED_PACKAGE_PARENT = "no.talkmore.faktura";
 
     private var mgr: EuiccManager? = null
 
@@ -181,7 +183,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         val safeIntent = IntentSanitizer.Builder()
             .allowAnyComponent()
             .allowPackage(ALLOWED_PACKAGE)
-            .allowPackage("no.talkmore.faktura")
+            .allowPackage(ALLOWED_PACKAGE_PARENT)
             .allowFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
             .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent::class.java)
             .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
