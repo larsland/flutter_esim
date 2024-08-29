@@ -181,6 +181,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         val safeIntent = IntentSanitizer.Builder()
             .allowAnyComponent()
             .allowPackage(ALLOWED_PACKAGE)
+            .allowPackage("no.talkmore.faktura")
             .allowFlags(Intent.FLAG_EXCLUDE_STOPPED_PACKAGES)
             .allowExtra("android.telephony.euicc.extra.EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT", PendingIntent::class.java)
             .allowAction(ACTION_DOWNLOAD_SUBSCRIPTION)
