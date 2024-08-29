@@ -99,7 +99,6 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_OK) {
                 sendEvent("1", hashMapOf("resultCode" to resultCode, "message" to "Successfully installed ESIM"))
             } else if (resultCode == EuiccManager.EMBEDDED_SUBSCRIPTION_RESULT_ERROR) {
-                handleResolvableError(intent)
                 val resultCode = getResultCode()
                 val resultData = getResultData()
                 val resultExtras = getResultExtras(false)
