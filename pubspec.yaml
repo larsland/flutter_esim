@@ -20,5 +20,5 @@ flutter:
   plugin:
     platforms:
       android:
-        package: no.talkmore.flutter_esim
+        package: no.talkmore.faktura.esim
         pluginClass: FlutterEsimPlugin

@@ -1,4 +1,4 @@
-group 'no.talkmore.flutter_esim'
+group 'no.talkmore.faktura.esim'
 version '1.0-SNAPSHOT'
 
 buildscript {
