@@ -81,7 +81,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private val REQUEST_CODE_INSTALL = 0
     private val ACTION_DOWNLOAD_SUBSCRIPTION = "download_subscription"
-    private val LPA_DECLARED_PERMISSION = "no.talkmore.faktura.lpa.permission.BROADCAST";
+    private val LPA_DECLARED_PERMISSION = "no.telenor.faktura.lpa.permission.BROADCAST";
 
     private val ALLOWED_PACKAGE = "no.talkmore.faktura";
 
@@ -125,6 +125,9 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
 
                 "installEsimProfile" -> {
+
+
+
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                         sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                         return
@@ -166,7 +169,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             intent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
                         )
-                        mgr?.downloadSubscription(sub, false, callbackIntent)
+                        mgr?.downloadSubscription(sub, true, callbackIntent)
                     } else {
                         sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                     }
