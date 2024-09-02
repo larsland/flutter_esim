@@ -161,15 +161,8 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                         val activationCode = (call.arguments as HashMap<*, *>)["profile"] as String
-                        val sub = DownloadableSubscription.forActivationCode(activationCode);
-                        val intent = Intent(ACTION_DOWNLOAD_SUBSCRIPTION).setPackage(context?.getPackageName());
-                        val callbackIntent = PendingIntent.getBroadcast(
-                            context, 
-                            REQUEST_CODE_INSTALL, 
-                            intent,
-                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-                        )
-                        mgr?.downloadSubscription(sub, true, callbackIntent)
+                        val intent = Intent(EuiccManager.ACTION_START_EUICC_ACTIVATION).setPackage(context?.getPackageName());
+                        context?.startActivity(intent)
                     } else {
                         sendEvent("5", hashMapOf("message" to "unsupported os or device"))
                     }
@@ -206,7 +199,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 callbackIntent
             )
         } catch (e: SendIntentException) {
-            sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" e.toString(), "cause" to e.cause!!.message))
+            sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" e.toString()))
         }
     }
 
