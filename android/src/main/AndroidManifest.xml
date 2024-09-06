@@ -1,13 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-<application>
-    <service
-        android:name=".CarrierEuiccProvisioningService"
-        android:exported="true"
-        android:permission="android.permission.WRITE_EMBEDDED_SUBSCRIPTIONS">
-        <intent-filter>
-            <action android:name="android.service.euicc.action.BIND_CARRIER_PROVISIONING_SERVICE"/>
-        </intent-filter>
-    </service>
-</application>
+
+    <permission android:protectionLevel="signature" android:name="no.talkmore.faktura.lpa.permission.BROADCAST" />
+    <uses-permission android:name="no.talkmore.faktura.lpa.permission.BROADCAST"/>
+    <uses-permission android:name="android.permission.WRITE_EMBEDDED_SUBSCRIPTIONS"
+        tools:ignore="ProtectedPermissions" />
+
+    <application>
+        <service
+            android:name=".CarrierEuiccProvisioningService"
+            android:exported="true"
+            android:permission="android.permission.WRITE_EMBEDDED_SUBSCRIPTIONS">
+            <intent-filter>
+                <action android:name="android.service.euicc.action.BIND_CARRIER_PROVISIONING_SERVICE"/>
+            </intent-filter>
+        </service>
+    </application>
 </manifest>
