@@ -205,7 +205,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 callbackIntent
             )
         } catch (e: Exception) {
-            sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e.message!!))
+            sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e))
         }
     }
 
