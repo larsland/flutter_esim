@@ -48,7 +48,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         private val eventChannels = mutableMapOf<BinaryMessenger, EventChannel>()
         private val eventHandlers = mutableListOf<WeakReference<EventCallbackHandler>>()
 
-        fun sendEvent(event: String, body: Map<String, Any>) {
+        fun sendEvent(event: String, body: Map<String, String?>) {
             eventHandlers.reapCollection().forEach {
                 it.get()?.send(event, body)
             }
@@ -205,7 +205,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 callbackIntent
             )
         } catch (e: SendIntentException) {
-            sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e.message?:""))
+            sendEvent("2", hashMapOf("message" to "failed to resolve resolvable error", "error" to e.message))
         }
     }
 
