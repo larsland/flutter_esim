@@ -105,7 +105,7 @@ class FlutterEsimPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 val detailsBody = hashMapOf("resultCode" to resultCode, "message" to "failed to install ESIM")
                 sendEvent("3", detailsBody)
             } else {
-                sendEvent("4", hashMapOf("resultCode" to resultCode, "message" to "an unknown error occured"))
+                sendEvent("4", hashMapOf("resultCode" to resultCode.toString(), "message" to "an unknown error occured"))
             }
         }
     }
